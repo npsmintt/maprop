@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faHouseChimneyMedical } from '@fortawesome/free-solid-svg-icons';
-import "../../css/navbar.css";
+import "../css/navbar.css";
 import "@fontsource/noto-sans-thai/800.css";
 import "@fontsource/noto-sans-thai/400.css";
 
