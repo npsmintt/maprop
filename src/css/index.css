@@ -1,0 +1,160 @@
+* {
+    font-family: 'Noto Sans Thai';
+    box-sizing: border-box;
+}
+
+form {
+    margin: 20px 20px 20px 20px;
+}
+
+.searchArea {
+    display: flex;
+    align-items: center;
+}
+
+.searchInput, .searchButton, .filterButton {
+    height: 40px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    padding: 10px 20px;
+}
+
+.searchInput {
+    width: 250px;
+}
+
+.searchButton {
+    margin-left: 10px;
+    background-color: #1987AA;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.searchButton:hover {
+    background-color: #135c72;
+    transition: all 100ms ease-in;
+}
+
+.filterButton {
+    display: flex;
+    align-items: center;
+    margin-left: -10px;
+    background-color: #333333;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.filterButton p {
+    margin-left: 10px;
+}
+
+.filterButton:hover {
+    background-color: #454545;
+    transition: all 100ms ease-in;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.listHolder {
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    width: 35%;
+    border-radius: 10px;
+    margin-right: 20px;
+    align-items: center;
+}
+
+.listHolderHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.map {
+    height: 400px; 
+    width: 60%;
+    margin-left: 20px;
+}
+
+#sorting {
+    height: 30px;
+    width: 140px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    padding: 5px 10px;
+    appearance: none;
+}
+
+.listHolderHeader p, label {
+    font-size: small;
+}
+
+.selectContainer {
+    display: flex;
+}
+
+.selectContainer label {
+    margin-right: 10px;
+    justify-items: center;
+}
+
+.listingContainer{
+    margin-left: 20px;
+    display: flex;
+    width: 90%;
+}
+
+.Tagging {
+    display: flex;
+}
+
+.Tagging p {
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-right: 10px;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+}
+
+.statusTag {
+    background-color: #198A00;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.salesTypeTag {
+    background-color: #00A3B1;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.listingName {
+    font-size: large;
+    font-weight: 600;
+}
+
+.listingID {
+    font-size: x-small;
+}
+
+.listingType, .listingPrice {
+    font-size: medium;
+}
+
+.statusTag, .salesTypeTag, .listingName, .listingID, .listingType {
+    margin-bottom: -15px;
+}
+
+.listingPic {
+    width: 150px;
+    margin-right: 20px;
+    background-color: #454545;
+    color: #ffffff;
+    justify-items: right;
+}
