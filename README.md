@@ -1,6 +1,8 @@
 # Maprop | Listings finder
 
-This project can currently run on localhost. use 'npm start' to run the project on port 3000.
+A website for agents to search for their company's active and inactive listings. They can filter out the searched results and view listings on Map using Google Map API.
+
+Note: This project can currently run on localhost. use 'npm start' to run the project on port 3000.
 
 ## UX/UI Design
 
@@ -8,7 +10,9 @@ This project can currently run on localhost. use 'npm start' to run the project 
 <img src="https://github.com/user-attachments/assets/ee9529a8-f510-49bc-8a74-78dcb437aefe" alt="Sitemap"/>
 
 ### User Flow
+<p>🔍 Searching properties</p>
 <img src="https://github.com/user-attachments/assets/acdbe1e1-8478-41c2-b762-69c1bb6db459" alt="Search properties"/>
+<p>📝 Registration process and Adding property</p>
 <img src="https://github.com/user-attachments/assets/66212d6c-408e-4671-83ab-9c7b025428ec" alt="Admin adding property"/>
 
 ### User Interface
