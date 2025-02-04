@@ -7,12 +7,12 @@ form {
     margin: 20px 20px 20px 20px;
 }
 
-.searchArea {
+.search {
     display: flex;
     align-items: center;
 }
 
-.searchInput, .searchButton, .filterButton {
+.search__input, .search__btn, .search__filter {
     height: 40px;
     border-radius: 10px;
     border-style: none;
@@ -20,11 +20,11 @@ form {
     padding: 10px 20px;
 }
 
-.searchInput {
+.search__input {
     width: 250px;
 }
 
-.searchButton {
+.search__btn {
     margin-left: 10px;
     background-color: #1987AA;
     color: #ffffff;
@@ -32,12 +32,12 @@ form {
     cursor: pointer;
 }
 
-.searchButton:hover {
+.search__btn:hover {
     background-color: #135c72;
     transition: all 100ms ease-in;
 }
 
-.filterButton {
+.search__filter {
     display: flex;
     align-items: center;
     margin-left: -10px;
@@ -47,114 +47,72 @@ form {
     cursor: pointer;
 }
 
-.filterButton p {
+.search__filter p {
     margin-left: 10px;
 }
 
-.filterButton:hover {
+.search__filter:hover {
     background-color: #454545;
     transition: all 100ms ease-in;
 }
 
 .container {
     display: flex;
-    justify-content: space-between;
+    height: 500px; 
+    /* justify-content: space-between; */
 }
 
-.listHolder {
-    background-color: #ffffff;
-    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
-    width: 35%;
-    border-radius: 10px;
-    margin-right: 20px;
-    align-items: center;
-}
-
-.listHolderHeader {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
-
-.map {
-    height: 400px; 
+.container__map {
     width: 60%;
     margin-left: 20px;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-#sorting {
-    height: 30px;
-    width: 140px;
-    border-radius: 10px;
-    border-style: none;
-    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
-    padding: 5px 10px;
-    appearance: none;
-}
-
-.listHolderHeader p, label {
-    font-size: small;
-}
-
-.selectContainer {
-    display: flex;
-}
-
-.selectContainer label {
-    margin-right: 10px;
-    justify-items: center;
-}
-
-.listingContainer{
+.container__listing{
     margin-left: 20px;
-    display: flex;
-    width: 90%;
-}
-
-.Tagging {
-    display: flex;
-}
-
-.Tagging p {
-    padding: 5px 10px;
+    background-color: #ffffff;
     border-radius: 10px;
-    margin-right: 10px;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    margin-right: 20px;
+    width: 40%;
+}
+
+.custom__marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 3px solid #ffffff;
     box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
 }
 
-.statusTag {
-    background-color: #198A00;
-    color: #ffffff;
-    font-weight: 600;
+.marker--rent {
+    background-color: #E0BA01;
 }
 
-.salesTypeTag {
+.marker--sell {
     background-color: #00A3B1;
-    color: #ffffff;
-    font-weight: 600;
 }
 
-.listingName {
-    font-size: large;
-    font-weight: 600;
+.marker--label {
+    background: white;
+    padding: 4px 8px;
+    width: max-content;
+    border-radius: 5px;
+    font-size: small;
+    color: black;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    position: absolute; /* Make sure it positions correctly */
+    top: -20px; /* Adjust so it appears above the marker */
+    left: 80%;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 100ms ease-in-out;
+    pointer-events: none; /* Prevent blocking interactions */
 }
-
-.listingID {
-    font-size: x-small;
-}
-
-.listingType, .listingPrice {
-    font-size: medium;
-}
-
-.statusTag, .salesTypeTag, .listingName, .listingID, .listingType {
-    margin-bottom: -15px;
-}
-
-.listingPic {
-    width: 150px;
-    margin-right: 20px;
-    background-color: #454545;
-    color: #ffffff;
-    justify-items: right;
+.custom__marker:hover .marker--label {
+    opacity: 1; /* Show on hover */
 }
