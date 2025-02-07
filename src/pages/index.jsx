@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSliders } from "@fortawesome/free-solid-svg-icons";
+import { faBuilding } from "@fortawesome/free-solid-svg-icons";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faKaaba } from "@fortawesome/free-solid-svg-icons";
+import { faTag } from "@fortawesome/free-solid-svg-icons";
 import "@fontsource/noto-sans-thai/800.css";
 import "@fontsource/noto-sans-thai/600.css";
 import "@fontsource/noto-sans-thai/400.css";
 import "../css/index.css";
-import { APIProvider, Map, AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps";
-import ListingList from "./listingList";
-import { createClient } from "@supabase/supabase-js";
-
-const googleAPI = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
-const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL,
-  process.env.REACT_APP_SUPABASE_ANON_KEY
-);
+import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
+import ListingList from "../components/listingList";
+import supabase from "../components/supabaseClient";
+import googleAPI from "../components/googleAPI";
 
 const Home = () => {
   const filterIcon = <FontAwesomeIcon icon={faSliders} size="md" />;
+  const condoIcon = <FontAwesomeIcon icon={faBuilding} size="sm" />;
+  const houseIcon = <FontAwesomeIcon icon={faHouse} size="sm" />;
+  const landIcon = <FontAwesomeIcon icon={faKaaba} size="sm" />
+  const priceIcon = <FontAwesomeIcon icon={faTag} size="sm" />
   const [keyword, setKeyword] = useState("");
   const [listings, setListings] = useState([]);
   const [hoveredListing, setHoveredListing] = useState(null);
@@ -27,10 +30,10 @@ const Home = () => {
     fetchListings();
   }, []);
 
-  async function fetchListings () {
+  async function fetchListings() {
     const { data, error } = await supabase
       .from("listings")
-      .select("listing_id, name, lat, lng, tradetype");
+      .select("listing_id, name, lat, lng, tradetype, price, type");
 
     if (error) {
       console.error("Error fetching listings: ", error.message);
@@ -38,6 +41,20 @@ const Home = () => {
     }
 
     setListings(data);
+  }
+
+  const formatCompactNumber = (number) => {
+    if (number < 1000) {
+      return number;
+    } else if (number >= 1000 && number < 1_000_000) {
+      return number / 1000 + "K";
+    } else if (number >= 1_000_000 && number < 1_000_000_000) {
+      return number / 1_000_000 + "M";
+    } else if (number >= 1_000_000_000 && number < 1_000_000_000_000) {
+      return number / 1_000_000_000 + "B";
+    } else if (number >= 1_000_000_000_000 && number < 1_000_000_000_000_000) {
+      return number / 1_000_000_000_000 + "T";
+    }
   };
 
   const handleSearch = (event) => {
@@ -78,7 +95,7 @@ const Home = () => {
         <div className="container__map">
           <APIProvider
             apiKey={googleAPI}
-            onLoad={() => console.log("Maps API has loaded.")}
+            language="th"
           >
             <Map
               mapId="7ef4f9d66b6db69f"
@@ -100,21 +117,38 @@ const Home = () => {
                     onMouseLeave={() => setHoveredListing(null)}
                     onClick={() => setSelectedListing(listing.listing_id)}
                   >
-                    <div className={`custom__marker ${listing.tradetype === "เช่า" ? "marker--rent" : "marker--sell"}`}>
-                  {hoveredListing === listing.listing_id && (
-                    <div className="marker--label">{listing.name}</div>
-                  )}
-                  </div>
+                    <div
+                      className={`custom__marker ${
+                        listing.tradetype === "เช่า"
+                          ? "marker--rent"
+                          : "marker--sell"
+                      }`}
+                    >
+                      {hoveredListing === listing.listing_id && (
+                        <div className="marker--label">
+                          <p className="label--header">
+                            {listing.type === 'CD' || listing.type === 'CB' 
+                              ? condoIcon 
+                              : listing.type === 'L' 
+                              ? landIcon 
+                              : houseIcon} {listing.name}
+                          </p>
+                          <p className="label--price">
+                          {priceIcon} {formatCompactNumber(listing.price)} บาท
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </AdvancedMarker>
                 </React.Fragment>
               ))}
             </Map>
           </APIProvider>
         </div>
-          <div className="container__listing">
-            <ListingList selectedListing={selectedListing}/>
-          </div>
+        <div className="container__listing">
+          <ListingList selectedListing={selectedListing} />
         </div>
+      </div>
     </>
   );
 };

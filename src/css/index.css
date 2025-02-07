@@ -100,11 +100,11 @@ form {
 
 .marker--label {
     background: white;
-    padding: 4px 8px;
+    padding: 0 10px;
     width: max-content;
     border-radius: 5px;
     font-size: small;
-    color: black;
+    color: #4B4B4B;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     position: absolute; /* Make sure it positions correctly */
     top: -20px; /* Adjust so it appears above the marker */
@@ -115,4 +115,13 @@ form {
 }
 .custom__marker:hover .marker--label {
     opacity: 1; /* Show on hover */
+}
+
+.label--header {
+    font-weight: 600;
+    margin-bottom: -10px;
+}
+
+.marker--label {
+    justify-items: left;
 }

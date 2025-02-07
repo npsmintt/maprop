@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTag } from "@fortawesome/free-solid-svg-icons";
-import { createClient } from "@supabase/supabase-js";
 import "../css/listingList.css";
-
-const supabase = createClient(
-    process.env.REACT_APP_SUPABASE_URL,
-    process.env.REACT_APP_SUPABASE_ANON_KEY
-  );
+import supabase from "./supabaseClient"
 
 const ListingList = ({ selectedListing }) => {
     const priceIcon = <FontAwesomeIcon icon={faTag} size="sm" />;
+    const navigate = useNavigate();
     const [listing, setListing] = useState([]);
     const [totalListing, setTotalListin] = useState(0);
 
     useEffect(() => {
-        console.log("Fetching listings...");
         getListing();
     }, []);
 
@@ -64,7 +60,7 @@ const ListingList = ({ selectedListing }) => {
           <div className="listbox__header">
             <div>
               <p className="header--bold">รายชื่อรายการ</p>
-              <p>({totalListing} รายการ)</p>
+              <p className="header--count">({totalListing} รายการ)</p>
             </div>
             <div className="header--select">
               <label htmlFor="sorting">เรียงจาก</label>
@@ -80,8 +76,13 @@ const ListingList = ({ selectedListing }) => {
               </div>
             </div>
           </div>
+          <div className="listbox__scroll">
         {listing.map((item) => (
-            <div key={item.listing_id} className={`listbox__listing ${selectedListing === item.listing_id ? "listing--highlight" : ""}`}>
+            <div 
+                key={item.listing_id} 
+                className={`listbox__listing ${selectedListing === item.listing_id ? "listing--highlight" : ""}`}
+                onClick={() => navigate(`/property/${item.listing_id}`)}
+            >
                 <div className="listing--pic">photo</div>
                     <div className="listing">
                         <div className="desc--tagging">
@@ -95,6 +96,7 @@ const ListingList = ({ selectedListing }) => {
                     </div>
             </div>
         ))}
+        </div>
         </div>
         </>
     );
