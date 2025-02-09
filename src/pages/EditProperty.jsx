@@ -84,8 +84,9 @@ const EditProperty = () => {
     } else {
       setListingData(data);
       setStatus(data.status);
-      setTradeType(data.tradeType);
+      setTradeType(data.tradetype);
       setPlaceName(data.name);
+      setPlaceAddress(data.address)
       setPrice(data.price);
       setType(data.type);
       setHouseNumber(data.number);
@@ -99,24 +100,22 @@ const EditProperty = () => {
     }
   };
 
-    const typeConvert = (type) => {
-        switch (type) {
-            case "CD":
-                return "คอนโด";
-            case "CB":
-                return "อาคารพาณิชย์";
-            case "DH":
-                return "บ้านเดี่ยว";
-            case "L":
-                return "ที่ดิน";
-            case "TH":
-                return "ทาวน์เฮ้าส์";
-            case "TW":
-                return "บ้านแฝด";
-            default:
-                return ""; 
-        }
-    };
+  function numberWithCommas(x) {
+    if (!x) return ""; 
+
+    x = x.toString().replace(/[^\d.]/g, "");
+
+    let parts = x.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return parts.length > 1 ? parts.join(".") : parts[0];
+  }
+
+  function stringToNumber(str) {
+    if (!str) return 0;
+  
+    return parseFloat(String(str).replace(/,/g, ""));
+  }
 
   const handlePlaceSelect = (place) => {
     setSelectedPlace(place);
@@ -148,7 +147,26 @@ const EditProperty = () => {
 
     const { error } = await supabase
       .from("listings")
-      .update(listingData)
+      .update({
+        name: placeName,
+        address: placeAddress,
+        type: type,
+        number: houseNumber,
+        price: stringToNumber(price),
+        salesperson: owner,
+        bedroom: bedroom,
+        bathroom: bathroom,
+        area: area,
+        lat: lat,
+        lng: lng, 
+        tradetype: tradeType,
+        status: status,
+        note: note,
+        created_at: new Date().toISOString(),
+        update_on: new Date().toISOString().split("T")[0],
+        update_at: new Date().toTimeString().split(" ")[0],
+        update_by: owner,
+      })
       .eq("listing_id", listing_id);
 
     if (error) {
@@ -170,30 +188,31 @@ const EditProperty = () => {
             <div className="header__select">
               <select
                 name="status"
+                value={status}
                 className={`select--status ${
-                  listingData.status === "Active"
+                  status === "Active"
                     ? "status--active"
                     : "status--inactive"
                 }`}
-                value={listingData.status}
+                onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
               <select
                 name="tradeType"
+                value={tradeType}
                 className={`select--tradeType ${
                   tradeType === "เช่า"
                     ? "trade--renting"
                     : "trade--selling"
                 }`}
-                value={tradeType}
+                onChange={(e) => setTradeType(e.target.value)}
               >
                 <option value="เช่า">เช่า</option>
                 <option value="ขาย">ขาย</option>
               </select>
             </div>
-
             <div className="header__btn">
             <button
                 type="button"
@@ -227,16 +246,21 @@ const EditProperty = () => {
                 solutionChannel="GMP_devsite_samples_v3_rgmautocomplete"
                 language="th">
                 <div className="input--name">
-                  <PlaceAutocomplete onPlaceSelect={handlePlaceSelect} />
+                <PlaceAutocomplete 
+                    onPlaceSelect={handlePlaceSelect} 
+                    initialValue={placeName} 
+                />
                   <button className="name--btn">{searchIcon}</button>
                 </div>
             </APIProvider>
             <input
               className="input--price"
-              value={listingData.price || 0} />
+              placeholder="ราคา"
+              value={price ? numberWithCommas(price) : ""}
+              onChange={(e) => setPrice(e.target.value)} />
           </div>
           <div className="container__address">
-              <p className="address--text">{listingData.address || "-"}</p>
+              <p className="address--text">{placeAddress || "-"}</p>
               <p className="address--baht">บาท</p>
           </div>
           <div className="container__desc">
@@ -253,13 +277,13 @@ const EditProperty = () => {
               <Map
                   mapId={"7ef4f9d66b6db69f"}
                   defaultZoom={13}
-                  defaultCenter={{ lat: listingData.lat, lng: listingData.lng }}
+                  center={{ lat, lng }}
                   gestureHandling={"greedy"}
                   disableDefaultUI={true}
               >
                   <AdvancedMarker 
                     key={listingData.listing_id}
-                    position={{ lat: listingData.lat, lng: listingData.lng }}>
+                    position={{ lat, lng }}>
                   <div
                   className={`custom__marker ${
                     tradeType === "เช่า"
@@ -287,7 +311,7 @@ const EditProperty = () => {
                   <select 
                     name="type" 
                     id="container--input" 
-                    defaultValue={typeConvert(type)}
+                    defaultValue={type}
                     onChange={(e) => setType(e.target.value)}>
                     <option value="CD">คอนโด</option>
                     <option value="CB">อาคารพาณิชย์</option>
@@ -303,6 +327,7 @@ const EditProperty = () => {
                   <input 
                   id="container--input" 
                   type="number"
+                  min="0"
                   value={bedroom}
                   onChange={(e) => setBedroom(e.target.value)}/>
                 </div>  
@@ -312,6 +337,7 @@ const EditProperty = () => {
                   <input 
                   id="container--input" 
                   type="number" 
+                  min="0"
                   value={bathroom}
                   onChange={(e) => setBathroom(e.target.value)}/>
                 </div>  
@@ -358,11 +384,10 @@ const EditProperty = () => {
   );
 };
 
-const PlaceAutocomplete = ({ onPlaceSelect }) => {
-    const { placeName } = useParams();
+const PlaceAutocomplete = ({ onPlaceSelect, initialValue }) => {
     const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
     const inputRef = useRef(null);
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState(initialValue || "");
     const places = useMapsLibrary("places");
 
   useEffect(() => {
@@ -391,6 +416,10 @@ const PlaceAutocomplete = ({ onPlaceSelect }) => {
       }
     });
   }, [onPlaceSelect, placeAutocomplete]);
+
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
 
   return (
     <input 

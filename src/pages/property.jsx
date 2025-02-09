@@ -26,11 +26,18 @@ const Property = () => {
   const { listing_id } = useParams();
   const navigate = useNavigate();
   const [listingData, setListingData] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [owner, setOwner] = useState([]);
+  const [updateBy, setUpdateBy] = useState([]);
 
   useEffect(() => {
     fetchProperty();
   }, [listing_id]);
+  
+  useEffect(() => {
+    if (listingData) {
+      getSalesName();
+    }
+  }, [listingData]);
 
   const fetchProperty = async () => {
     const { data, error } = await supabase
@@ -38,12 +45,45 @@ const Property = () => {
       .select("*")
       .eq("listing_id", listing_id)
       .single();
-
+  
     if (error) {
       console.error("Error fetching property:", error.message);
     } else {
       setListingData(data);
     }
+  };
+
+  const getSalesName = async () => {
+    const { data, error } = await supabase
+      .from("salesperson")
+      .select("sales_id, nickname");
+  
+    if (error) {
+      console.error("Error fetching salesperson: ", error.message);
+      return;
+    }
+  
+    const salesperson = data.find(person => person.sales_id === listingData.salesperson);
+    const updateBy = data.find(person => person.sales_id === listingData.update_by);
+    
+    if (salesperson) {
+      setOwner(salesperson.nickname);
+    } else {
+      console.log("Salesperson not found");
+    }
+
+    if (updateBy) {
+      setUpdateBy(updateBy.nickname);
+    } else {
+      console.log("update_by not found");
+    }
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    }).format(price);
   };
 
   const typeConvert = (type) => {
@@ -130,7 +170,7 @@ const Property = () => {
                   แก้ไขล่าสุด
                   <br />
                   {listingData.update_on} | {listingData.update_at} |{" "}
-                  {listingData.updated_by}
+                  {updateBy}
                 </p>
               </div>
             ) : (
@@ -149,7 +189,7 @@ const Property = () => {
             </div>
             <div className="input--name">
               <div className="name--disbled">{listingData.name}</div>
-              <div className="price--disbled">{listingData.price}</div>
+              <div className="price--disbled">{formatPrice(listingData.price)}</div>
             </div>
           </div>
           <div className="container__address">
@@ -177,7 +217,7 @@ const Property = () => {
                     disableDefaultUI={true}
                   >
                     <AdvancedMarker
-                      key={listingData.listing_id}
+                      key={listing_id}
                       position={{ lat: listingData.lat, lng: listingData.lng }}
                     >
                       <div
@@ -216,14 +256,14 @@ const Property = () => {
               <hr />
               <div className="details__container">
                 <p className="container--text">พื้นที่รวม:</p>
-                <div className="container--area">
+                <div className="container--area--disabled">
                   <div id="input--disabled">{listingData.area} ตรม.</div>
                 </div>
               </div>
               <hr />
               <div className="details__container">
                 <p className="container--text">ผู้รับผิดชอบโครงการ:</p>
-                <div id="input--disabled">{listingData.salesperson}</div>
+                <div id="input--disabled">{owner}</div>
               </div>
               <hr />
               <div className="details__container--note">

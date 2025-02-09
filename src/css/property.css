@@ -11,13 +11,13 @@
     display: flex;
     align-items: center;
     padding-left: 10px;
-    font-size: large;
+    font-size: x-large;
 }
 
 .price--disbled {
     width: 30%;
     display: flex;
-    font-size: large;
+    font-size: x-large;
     align-items: center;
     justify-content: right;
 }
@@ -38,9 +38,16 @@
     vertical-align: text-top;
     margin-right: 10px;
     height: 80px;
-    padding-left: 10px;
     width: 100%;
     margin-bottom: 20px;
     color: #4b4b4b;
     font-size: small;
+}
+
+.container--area--disabled {
+    color: #4b4b4b;
+    font-size: small;
+    display: flex;
+    justify-content: right;
+    width: 83%;
 }

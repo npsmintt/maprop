@@ -112,6 +112,22 @@ const AddProperty = () => {
     return `${salesPrefix}${year}${tradeCode}-${formattedNumber}`;
   };
 
+  function numberWithCommas(x) {
+    if (!x) return ""; 
+
+    x = x.toString().replace(/[^\d.]/g, "");
+  
+    let parts = x.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  
+    return parts.length > 1 ? parts.join(".") : parts[0];
+  }
+
+  function stringToNumber(str) {
+    if (!str) return 0; 
+    return parseFloat(str.replace(/,/g, ""));
+  }
+
   const MapHandler = ({ place, marker }) => {
     const map = useMap();
   
@@ -171,9 +187,10 @@ const AddProperty = () => {
         {
           listing_id: newListingId,
           name: placeName,
+          address: placeAddress,
           type: type,
           number: houseNumber,
-          price: price,
+          price: stringToNumber(price),
           salesperson: owner,
           bedroom: bedroom,
           bathroom: bathroom,
@@ -263,6 +280,7 @@ const AddProperty = () => {
               <input
                   className="input--price"
                   placeholder="ราคา"
+                  value={price ? numberWithCommas(price) : ""}
                   onChange={(e) => setPrice(e.target.value)}
                 />
             </div>
@@ -334,6 +352,7 @@ const AddProperty = () => {
                   <input 
                   id="container--input" 
                   type="number" 
+                  min="0"
                   onChange={(e) => setBedroom(e.target.value)}/>
                 </div>  
                 <hr />
@@ -342,6 +361,7 @@ const AddProperty = () => {
                   <input 
                   id="container--input" 
                   type="number" 
+                  min="0"
                   onChange={(e) => setBathroom(e.target.value)}/>
                 </div>  
                 <hr />
