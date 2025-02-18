@@ -52,8 +52,8 @@ function App() {
       <Navbar />
       {/* {isAuthenticated && <Navbar />} */}
       <Routes>
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />}/>
         <Route path="/" element={<Home />} />
         <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/addproperty" element={<AddProperty />} />

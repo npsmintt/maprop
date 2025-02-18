@@ -124,12 +124,12 @@ const Register = () => {
 
     return (
         <>
-        <div style={{ width: "450px" }}>
+        <div className="large__container">
         <div className="login__logo">
             <p className="logo--white">MA</p>
             <p className="logo--black">PROP</p>
         </div>
-        <div className="login__container">
+        <div className="login__container" style={{ "width": "400px" }}>
             <form className="login__form" noValidate onSubmit={handleSubmit}>
                 <p className="signup__header">ลงทะเบียนผู้ใช้ใหม่</p>
                 <div className="signup__container">
