@@ -13,11 +13,6 @@ import {
   APIProvider,
   Map,
   AdvancedMarker,
-  MapControl,
-  ControlPosition,
-  useMap,
-  useMapsLibrary,
-  useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import googleAPI from "../components/googleAPI";
 import "../css/property.css";
@@ -222,11 +217,18 @@ const Property = () => {
                     >
                       <div
                         className={`custom__marker ${
-                          listingData.tradetype === "เช่า"
-                            ? "marker--rent"
-                            : "marker--sell"
-                        }`}
-                      />
+                          listingData.type === "CB"
+                            ? "marker--CB"
+                            : listingData.type === "CD"
+                            ? "marker--CD"
+                            : listingData.type === "DH"
+                            ? "marker--DH"
+                            : listingData.type === "L"
+                            ? "marker--L"
+                            : listingData.type === "TH"
+                            ? "marker--TH"
+                            : "marker--TW"
+                        }`} />
                     </AdvancedMarker>
                   </Map>
                 </APIProvider>
@@ -264,6 +266,20 @@ const Property = () => {
               <div className="details__container">
                 <p className="container--text">ผู้รับผิดชอบโครงการ:</p>
                 <div id="input--disabled">{owner}</div>
+              </div>
+              <hr />
+              <div className="details__container--pet">
+                <label key={listingData.pet} className="custom-checkbox">
+                  <input 
+                    type="checkbox" 
+                    checked={listingData.pet === "yes"}
+                    disabled
+                  />
+                  <span className="checkmark">
+                    <span className="inner-box"></span>
+                  </span> 
+                  <p className="container--text">เลี้ยงสัตว์ได้</p>
+                </label>
               </div>
               <hr />
               <div className="details__container--note">

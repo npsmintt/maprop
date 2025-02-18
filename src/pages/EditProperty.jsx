@@ -10,7 +10,8 @@ import { faTrash,
         faMagnifyingGlass, 
         faBuilding,
         faHouse,
-        faKaaba
+        faKaaba,
+        faSpinner
  } from "@fortawesome/free-solid-svg-icons";
 import "../css/addProperty.css";
 import supabase from "../components/supabaseClient"
@@ -18,21 +19,15 @@ import {
   APIProvider,
   Map,
   AdvancedMarker,
-  MapControl,
-  ControlPosition,
-  useMap,
-  useMapsLibrary,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import googleAPI from "../components/googleAPI";
+import PlaceAutocomplete from "../components/autocomplete";
 
 const EditProperty = () => {
     const { listing_id } = useParams();
     const navigate = useNavigate();
     const [listingData, setListingData] = useState(null);
-
-    const trashIcon = <FontAwesomeIcon icon={faTrash} />;
-    const pinIcon = <FontAwesomeIcon icon={faLocationDot} size="xl"/>
     const searchIcon = <FontAwesomeIcon icon={faMagnifyingGlass} size="xl"/>
     
     const [selectedPlace, setSelectedPlace] = useState(null);
@@ -51,6 +46,7 @@ const EditProperty = () => {
     const [area, setArea] = useState(0);
     const [owner, setOwner] = useState("");
     const [note, setNote] = useState("");
+    const [pet, setPet] = useState("");
     const [lat, setLat] = useState(13.7052423);
     const [lng, setLng] = useState(100.6354375);
 
@@ -97,6 +93,7 @@ const EditProperty = () => {
       setNote(data.note);
       setLat(data.lat);
       setLng(data.lng);
+      setPet(data.pet);
     }
   };
 
@@ -166,6 +163,7 @@ const EditProperty = () => {
         update_on: new Date().toISOString().split("T")[0],
         update_at: new Date().toTimeString().split(" ")[0],
         update_by: owner,
+        pet: pet, 
       })
       .eq("listing_id", listing_id);
 
@@ -178,7 +176,13 @@ const EditProperty = () => {
     }
   };
 
-  if (!listingData) return <p>Loading...</p>;
+  if (!listingData) return 
+    <>
+      <div>
+        <FontAwesomeIcon className="fa-spin" icon={faSpinner} size="xl"/> 
+        <p>Please wait a moment...</p>;
+      </div>
+    </>
 
   return (
     <>
@@ -239,7 +243,9 @@ const EditProperty = () => {
                     ? <FontAwesomeIcon icon={faBuilding} size="xl"/> 
                     : type === 'L' 
                     ? <FontAwesomeIcon icon={faKaaba} size="xl"/>
-                    : <FontAwesomeIcon icon={faHouse} size="xl"/>}
+                    : type === 'DH' || type === 'TH' || type === 'TW'
+                    ? <FontAwesomeIcon icon={faHouse} size="xl"/>
+                    : <FontAwesomeIcon icon={faLocationDot} size="xl"/>}
             </div>
             <APIProvider
                 apiKey={googleAPI}
@@ -247,6 +253,7 @@ const EditProperty = () => {
                 language="th">
                 <div className="input--name">
                 <PlaceAutocomplete 
+                    className="name--input"
                     onPlaceSelect={handlePlaceSelect} 
                     initialValue={placeName} 
                 />
@@ -286,9 +293,17 @@ const EditProperty = () => {
                     position={{ lat, lng }}>
                   <div
                   className={`custom__marker ${
-                    tradeType === "เช่า"
-                      ? "marker--rent"
-                      : "marker--sell"
+                    type === "CB"
+                      ? "marker--CB"
+                      : type === "CD"
+                      ? "marker--CD"
+                      : type === "DH"
+                      ? "marker--DH"
+                      : type === "L"
+                      ? "marker--L"
+                      : type === "TH"
+                      ? "marker--TH"
+                      : "marker--TW"
                   }`} />
                   </AdvancedMarker>
               </Map>
@@ -368,6 +383,21 @@ const EditProperty = () => {
                   </select>
                 </div>  
                 <hr />
+                <div className="details__container--pet">
+                  <label key={pet} className="custom-checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={pet === "yes"}
+                      onChange={(e) => setPet(e.target.checked ? "yes" : "no")
+                      }
+                    />
+                    <span className="checkmark">
+                      <span className="inner-box"></span>
+                    </span> 
+                    <p className="container--text">เลี้ยงสัตว์ได้</p>
+                  </label>
+                </div>
+                <hr />
                 <div className="details__container--note">
                   <p className="container--text">ข้อมูลเพิ่มเติม:</p>
                   <textarea 
@@ -381,53 +411,6 @@ const EditProperty = () => {
         </form>
       </div>
     </>
-  );
-};
-
-const PlaceAutocomplete = ({ onPlaceSelect, initialValue }) => {
-    const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
-    const inputRef = useRef(null);
-    const [inputValue, setInputValue] = useState(initialValue || "");
-    const places = useMapsLibrary("places");
-
-  useEffect(() => {
-    if (!places || !inputRef.current) return;
-
-    const options = {
-      fields: ["geometry", "name", "formatted_address"],
-    };
-
-    setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
-  }, [places]);
-
-  useEffect(() => {
-    if (!placeAutocomplete) return;
-
-    placeAutocomplete.addListener("place_changed", () => {
-      const place = placeAutocomplete.getPlace();
-      if (place.geometry && place.geometry.location) {
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-
-        setInputValue(place.name || "");
-
-        // Pass lat and lng along with place
-        onPlaceSelect({ ...place, lat, lng });
-      }
-    });
-  }, [onPlaceSelect, placeAutocomplete]);
-
-  useEffect(() => {
-    setInputValue(initialValue);
-  }, [initialValue]);
-
-  return (
-    <input 
-    className="name--input" 
-    placeholder="ค้นหาสถานที่"
-    value = {inputValue}
-    ref={inputRef}
-    onChange={(e) => setInputValue(e.target.value)} />
   );
 };
 

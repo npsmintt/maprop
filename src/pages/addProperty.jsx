@@ -9,18 +9,17 @@ import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "../css/addProperty.css";
+import "../css/filter.css";
 import supabase from "../components/supabaseClient"
 import {
   APIProvider,
   Map,
   AdvancedMarker,
-  MapControl,
-  ControlPosition,
   useMap,
-  useMapsLibrary,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import googleAPI from "../components/googleAPI";
+import PlaceAutocomplete from "../components/autocomplete";
 
 const AddProperty = () => {
   const trashIcon = <FontAwesomeIcon icon={faTrash} />;
@@ -46,6 +45,7 @@ const AddProperty = () => {
   const [note, setNote] = useState("");
   const [lat, setLat] = useState(13.7052423);
   const [lng, setLng] = useState(100.6354375);
+  const [pet, setPet] = useState("no");
 
   useEffect(() => {
           console.log("Fetching salesperson...");
@@ -116,10 +116,10 @@ const AddProperty = () => {
     if (!x) return ""; 
 
     x = x.toString().replace(/[^\d.]/g, "");
-  
+
     let parts = x.split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  
+
     return parts.length > 1 ? parts.join(".") : parts[0];
   }
 
@@ -171,7 +171,8 @@ const AddProperty = () => {
                   "owner:", owner,
                   "note:", note,
                   "lat:", lat,
-                  "lng:", lng)
+                  "lng:", lng,
+                  "pet:", pet)
       alert("กรุณากรอกข้อมูลให้ครบถ้วน");
       return;
     }
@@ -202,6 +203,7 @@ const AddProperty = () => {
           note: note,
           created_at: new Date().toISOString(),
           update_by: owner,
+          pet: pet,
         },
       ]);
 
@@ -215,7 +217,8 @@ const AddProperty = () => {
         "owner:", owner,
         "note:", note,
         "lat:", lat,
-        "lng:", lng)
+        "lng:", lng,
+        "pet:", pet)
 
       if (error) {
         console.error("Error saving property:", error.message);
@@ -273,7 +276,7 @@ const AddProperty = () => {
                 language="th"
               >
                 <div className="input--name">
-                  <PlaceAutocomplete onPlaceSelect={handlePlaceSelect} />
+                  <PlaceAutocomplete className="name--input" onPlaceSelect={handlePlaceSelect} />
                   <button className="name--btn" disabled>{searchIcon}</button>
                 </div>
               </APIProvider>
@@ -302,7 +305,7 @@ const AddProperty = () => {
                 >
                   <Map
                       mapId={"7ef4f9d66b6db69f"}
-                      defaultZoom={13}
+                      defaultZoom={15}
                       defaultCenter={{ lat , lng }}
                       gestureHandling={"greedy"}
                       disableDefaultUI={true}
@@ -310,9 +313,17 @@ const AddProperty = () => {
                       <AdvancedMarker ref={markerRef} position={null}>
                       <div
                       className={`custom__marker ${
-                        tradeType === "เช่า"
-                          ? "marker--rent"
-                          : "marker--sell"
+                        type === "CB"
+                          ? "marker--CB"
+                          : type === "CD"
+                          ? "marker--CD"
+                          : type === "DH"
+                          ? "marker--DH"
+                          : type === "L"
+                          ? "marker--L"
+                          : type === "TH"
+                          ? "marker--TH"
+                          : "marker--TW"
                       }`} />
                       </AdvancedMarker>
                   </Map>
@@ -391,6 +402,20 @@ const AddProperty = () => {
                   </select>
                 </div>  
                 <hr />
+                <div className="details__container--pet">
+                  <label key={type.type_id} className="custom-checkbox">
+                    <input 
+                      type="checkbox" 
+                      checked={pet === "yes"} 
+                      onChange={(e) => setPet(e.target.checked ? "yes" : "no")} // Set pet to "yes" when checked, "no" when unchecked
+                    />
+                    <span className="checkmark">
+                      <span className="inner-box"></span>
+                    </span> 
+                    <p className="container--text">เลี้ยงสัตว์ได้</p>
+                  </label>
+                </div>
+                <hr />
                 <div className="details__container--note">
                   <p className="container--text">ข้อมูลเพิ่มเติม:</p>
                   <textarea 
@@ -404,49 +429,6 @@ const AddProperty = () => {
         </form>
       </div>
     </>
-  );
-};
-
-const PlaceAutocomplete = ({ onPlaceSelect }) => {
-  const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
-  const inputRef = useRef(null);
-  const [inputValue, setInputValue] = useState("");
-  const places = useMapsLibrary("places");
-
-  useEffect(() => {
-    if (!places || !inputRef.current) return;
-
-    const options = {
-      fields: ["geometry", "name", "formatted_address"],
-    };
-
-    setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
-  }, [places]);
-
-  useEffect(() => {
-    if (!placeAutocomplete) return;
-
-    placeAutocomplete.addListener("place_changed", () => {
-      const place = placeAutocomplete.getPlace();
-      if (place.geometry && place.geometry.location) {
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-
-        setInputValue(place.name || "");
-
-        // Pass lat and lng along with place
-        onPlaceSelect({ ...place, lat, lng });
-      }
-    });
-  }, [onPlaceSelect, placeAutocomplete]);
-
-  return (
-    <input 
-    className="name--input" 
-    placeholder="ค้นหาสถานที่"
-    value={inputValue} 
-    ref={inputRef}
-    onChange={(e) => setInputValue(e.target.value)} />
   );
 };
 

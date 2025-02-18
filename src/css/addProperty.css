@@ -6,11 +6,13 @@
     justify-self: center;
     height: max-content;
     display: flex;
+    background-color: #ffffff;
 }
 
 .container__form {
     margin: 30px;
     width: 100%;
+    height: max-content;
 }
 
 .container__header {
@@ -33,7 +35,6 @@
     box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
     color: #ffffff;
     font-weight: 600;
-    cursor: pointer;
 }
 
 .header__btn {
@@ -179,6 +180,13 @@
     align-items: center;
 }
 
+.details__container--pet {
+    display: flex;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    align-items: center;
+}
+
 .container--text, #container--input {
     color: #4b4b4b;
     font-size: small;
@@ -219,4 +227,15 @@
     box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
     margin-bottom: 20px;
     word-break: break-word
+}
+
+.fa-spin {
+    color: #4b4b4b;
+    --fa-animation-duration: 2s;
+    animation-name: fa-spin;
+    animation-duration: var(--fa-animation-duration, 2s);
+    animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+    animation-timing-function: var(--fa-animation-timing, linear);
+    animation-delay: var(--fa-animation-delay, 0s);
+    animation-direction: var(--fa-animation-direction, normal);
 }

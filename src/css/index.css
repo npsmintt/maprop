@@ -12,7 +12,7 @@ form {
     align-items: center;
 }
 
-.search__input, .search__btn, .search__filter {
+.search__input, .search__btn, .search__filter, .clear__btn {
     height: 40px;
     border-radius: 10px;
     border-style: none;
@@ -22,6 +22,9 @@ form {
 
 .search__input {
     width: 250px;
+    z-index: 10;
+    position: relative;
+    margin: 20px 20px 20px 20px;
 }
 
 .search__btn {
@@ -88,40 +91,85 @@ form {
     border-radius: 100%;
     border: 3px solid #ffffff;
     box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    position: relative;
 }
 
-.marker--rent {
-    background-color: #E0BA01;
+.marker--CB {
+    background-color: #f3c276;
 }
 
-.marker--sell {
-    background-color: #00A3B1;
+.marker--CD {
+    background-color: #578e95;
+}
+
+.marker--DH {
+    background-color: #80cdb4;
+}
+
+.marker--L {
+    background-color: #826e5c;
+}
+
+.marker--TH {
+    background-color: #91a3c5;
+}
+
+.marker--TW {
+    background-color: #fbcfce;
 }
 
 .marker--label {
     background: white;
     padding: 0 10px;
-    width: max-content;
+    width: 200px;
     border-radius: 5px;
     font-size: small;
     color: #4B4B4B;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    position: absolute; /* Make sure it positions correctly */
-    top: -20px; /* Adjust so it appears above the marker */
-    left: 80%;
-    opacity: 0; /* Initially hidden */
+    position: absolute; 
+    top: -40px; 
+    left: 120%;
+    opacity: 1; 
     transition: opacity 100ms ease-in-out;
-    pointer-events: none; /* Prevent blocking interactions */
-}
-.custom__marker:hover .marker--label {
-    opacity: 1; /* Show on hover */
+    pointer-events: none;
 }
 
 .label--header {
     font-weight: 600;
     margin-bottom: -10px;
+    text-align: left;
+}
+
+.label--details {
+    margin-bottom: -10px;
 }
 
 .marker--label {
     justify-items: left;
+}
+
+.autocomplete {
+  position: absolute;
+  background: white;
+  width: 250px;
+  list-style: none;
+  padding: 0 10px;
+  margin-top: 0;
+  max-height: 150px;
+  overflow-y: scroll;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  top: 120px;
+  left: 20px;
+  z-index: 2;
+  font-size: small;
+}
+
+.autocomplete li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.autocomplete li:hover {
+  background: #f0f0f0;
 }

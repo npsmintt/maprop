@@ -1,0 +1,27 @@
+.container__head {
+    font-size: x-large;
+    font-weight: 600;
+    color: #4B4B4B;
+}
+
+.account--line {
+    background-color: #B2B2B2;
+    height: 1px;
+    border: none;
+    margin: -5px 0;
+}
+
+.container__flex {
+    display: flex;
+    height: 5%;
+    align-items: center;
+    color: #4b4b4b;
+}
+
+.flex--head {
+    width: 20%;
+}
+
+.flex--contents {
+    width: 80%;
+}
