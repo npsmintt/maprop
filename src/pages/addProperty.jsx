@@ -4,10 +4,7 @@ import "@fontsource/noto-sans-thai/800.css";
 import "@fontsource/noto-sans-thai/600.css";
 import "@fontsource/noto-sans-thai/400.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faFloppyDisk, faLocationDot, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "../css/addProperty.css";
 import "../css/filter.css";
 import supabase from "../components/supabaseClient"

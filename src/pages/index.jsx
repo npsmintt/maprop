@@ -13,7 +13,6 @@ import googleAPI from "../components/googleAPI";
 import Popup from "reactjs-popup";
 import PlaceAutocomplete from "../components/autocomplete";
 
-
 const Home = () => {
   const filterIcon = <FontAwesomeIcon icon={faSliders} size="md" />;
   const condoIcon = <FontAwesomeIcon icon={faBuilding} size="sm" />;
@@ -41,6 +40,7 @@ const Home = () => {
   
   useEffect(() => {
     fetchListings();
+    console.log(listings);
   }, [filters]);
 
   async function fetchListings() {

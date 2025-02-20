@@ -2,6 +2,9 @@
     font-size: x-large;
     font-weight: 600;
     color: #4B4B4B;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .account--line {
@@ -16,6 +19,7 @@
     height: 5%;
     align-items: center;
     color: #4b4b4b;
+    justify-content: space-between;
 }
 
 .flex--head {
@@ -25,3 +29,34 @@
 .flex--contents {
     width: 80%;
 }
+
+.account--input {
+    padding: 0 10px;
+    height: 30px;
+    width: 80%;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    cursor: pointer;
+}
+
+.account--input--name {
+    padding: 0 10px;
+    height: 30px;
+    width: 250px;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 0.25);
+    cursor: pointer;
+}
+
+.account--input--disabled {
+    background-color: #e7e7e7;
+    color: #7e7e7e;
+    box-shadow: none;
+}
+
+.flex--head--name {
+    width: 100px;
+}
+

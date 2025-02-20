@@ -3,18 +3,30 @@ import { useNavigate } from "react-router-dom";
 import supabase from "../components/supabaseClient";
 import "../css/index.css";
 import "../css/login.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
     const [username, setUserName] = useState(""); 
     const [password, setPassword] = useState("");
     const [error, setError] = useState(""); 
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        if (!username || !password) {
-            setError("กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
+        if (!username) {
+            setError("กรุณากรอกชื่ออีเมลล์");
+            setLoading(false);
+            return;
+        }
+
+        if (!password) {
+            setError("กรุณากรอกรหัสผ่าน");
+            setLoading(false);
             return;
         }
 
@@ -24,42 +36,50 @@ const Login = () => {
         });
 
         if (loginError) {
-            setError(`Login failed: ${loginError.message}`);
-            console.error("Login failed:", loginError.message);
+            if (loginError.message.toLowerCase().includes("invalid login credentials")) {
+                setError("อีเมลล์/รหัสผ่านไม่ถูกต้อง");
+            } else {
+                setError(`Login failed: ${loginError.message}`);
+            }
+            setLoading(false);
             return;
         }
 
-        // After successful login, check if the email exists in the salesperson table
         const { data: salesperson, error: salespersonError } = await supabase
             .from('salesperson')
-            .select('sales_id, email') // Select only the fields you need
-            .eq('email', username) // Match the email with the input username
-            .single(); // We expect only one result
+            .select('sales_id, email') 
+            .eq('email', username) 
+            .single(); 
 
         if (salespersonError) {
-            setError(`Error fetching salesperson data: ${salespersonError.message}`);
+            setError("มีข้อผิดพลาด กรุณาติดต่อแอดมิน");
+            console.error(`Error fetching salesperson data: ${salespersonError.message}`);
+            setLoading(false);
             return;
         }
 
         if (!salesperson) {
-            setError("ไม่มีบัญชีผู้ใช้นี้ในระบบ"); // If no match is found
+            setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
+            console.error("no sales ID");
+            setLoading(false);
             return;
         }
 
-        // If salesperson is found, redirect to the homepage with sales_id
+        setLoading(false);
         console.log("Salesperson found:", salesperson);
         navigate("/", { state: { sales_id: salesperson.sales_id } });
     };
 
     const handleForgotPassword = async () => {
-        const { error: resetError } = await supabase.auth.api.resetPasswordForEmail(username);
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(username, {
+            redirectTo: '/reset-password',
+        });
         if (resetError) {
             setError(`Password reset failed: ${resetError.message}`);
         } else {
             setError("Password reset email sent!");
         }
     };
-
 
     return (
         <>
@@ -70,15 +90,16 @@ const Login = () => {
         </div>
         <div className="login__container">
             <form className="login__form" noValidate onSubmit={handleSubmit}>
+                <p className="signup__header">เข้าสู่ระบบ</p>
                 <label htmlFor="email">
-                    <p className="form__label">ชื่อผู้ใช้ / อีเมลล์</p>
+                    <p className="form__label">อีเมลล์</p>
                 </label>
                 <input
                     className="form__input"
                     id="email"
                     name="email"
                     type="text"
-                    placeholder="กรุณากรอกชื่อผู้ใช้/อีเมลล์"
+                    placeholder="กรุณากรอกอีเมลล์"
                     value={username}
                     onChange={(e) => setUserName(e.target.value)}
                 />
@@ -100,12 +121,15 @@ const Login = () => {
                     onClick={handleForgotPassword}
                     type="button">ลืมรหัสผ่าน</button>
                 </div>
-                <button className="btn--login" type="submit">เข้าสู่ระบบ</button>
+                {error && <p className="err__message">{error}</p>}
+                <button className="btn--login" type="submit">
+                    {loading ? <FontAwesomeIcon icon={faSpinner} style={{ "color": "white" }}/>: "เข้าสู่ระบบ"}
+                </button>
             </form>
             <button 
             className="btn--register" 
             type="button"
-            onClick={() => navigate("/register")}>ลงทะเบียน</button>
+            onClick={() => navigate("/signup")}>ลงทะเบียน</button>
         </div>
         </div>
         </>
