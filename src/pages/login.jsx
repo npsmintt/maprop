@@ -38,7 +38,7 @@ const Login = () => {
         if (loginError) {
             if (loginError.message.toLowerCase().includes("invalid login credentials")) {
                 setError("อีเมลล์/รหัสผ่านไม่ถูกต้อง");
-            } if (loginError.message.toLowerCase().includes("email not confirmed")) {
+            } if (loginError.message.toLowerCase().includes("login failed: email not confirmed")) {
                 setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
             } else {
                 setError(`เกิดข้อผิดพลาด: ${loginError.message}`);
