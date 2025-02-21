@@ -162,3 +162,22 @@
     margin-bottom: 20px;
     word-break: break-word
 }
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+    .btn--register, .btn--forget {
+        color: #4b4b4b;
+    }
+
+    .btn--register, .btn--login {
+        justify-self: center;
+    }
+  }
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+
+}

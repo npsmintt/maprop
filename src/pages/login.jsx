@@ -38,8 +38,10 @@ const Login = () => {
         if (loginError) {
             if (loginError.message.toLowerCase().includes("invalid login credentials")) {
                 setError("อีเมลล์/รหัสผ่านไม่ถูกต้อง");
+            } if (loginError.message.toLowerCase().includes("email not confirmed")) {
+                setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
             } else {
-                setError(`Login failed: ${loginError.message}`);
+                setError(`เกิดข้อผิดพลาด: ${loginError.message}`);
             }
             setLoading(false);
             return;
@@ -51,16 +53,13 @@ const Login = () => {
             .eq('email', username) 
             .single(); 
 
-        if (salespersonError) {
-            setError("มีข้อผิดพลาด กรุณาติดต่อแอดมิน");
+        if (salespersonError || !salesperson) {
+            // setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
             console.error(`Error fetching salesperson data: ${salespersonError.message}`);
             setLoading(false);
-            return;
-        }
-
-        if (!salesperson) {
-            setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
-            console.error("no sales ID");
+            navigate("/form")
+        } else {
+            setError("เกิดข้อผิดพลาด กรุณาติดต่อแอดมิน");
             setLoading(false);
             return;
         }
