@@ -59,7 +59,7 @@ const Login = () => {
         setLoading(false);
 
         if (salespersonError || !salesperson) {
-            // setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
+            setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
             console.log(`Error fetching salesperson data: ${salespersonError.message}`);
             navigate("/form")
 
