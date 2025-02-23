@@ -56,16 +56,18 @@ const Login = () => {
             .eq('email', username) 
             .single(); 
 
-        setLoading(false);
-
         if (salespersonError || !salesperson) {
             setError("กรุณายืนยันอีเมลล์ก่อนเข้าสู่ระบบ");
-            console.log(`Error fetching salesperson data: ${salespersonError.message}`);
-            navigate("/form")
+            console.error(`Error fetching salesperson data: ${salespersonError?.message}`);
+            setLoading(false);
+            navigate("/form");
+            return;
+        }
 
         console.log("Salesperson found:", salesperson);
+        setLoading(false);
         navigate("/", { state: { sales_id: salesperson.sales_id }});
-    }};
+    };
 
     const handleForgotPassword = async () => {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(username, {
